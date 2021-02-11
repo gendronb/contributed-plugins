@@ -275,7 +275,7 @@
         "open": true,
         "autorun": false,
         "loop": false,
-        "controls": ["lock", "delay", "refresh"],
+        "controls": ["lock", "loop", "refresh", "reverse"],
         "params": {
           "delay": 3000,
           "type": "number",

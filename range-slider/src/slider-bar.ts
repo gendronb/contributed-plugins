@@ -59,6 +59,8 @@ export class SliderBar {
         this._slider.range = config.range;
         this._slider.export = config.export;
 
+        this._slider.reverse = false;
+
         // set range and limits information. Will help to set the different slider (range (single or dual) and limit (dynamic or static))
         this._stepType = config.stepType;
         this._rangeType = config.rangeType;
@@ -319,6 +321,21 @@ export class SliderBar {
     }
 
     /**
+     * Set slider reverse
+     * @property reverse
+     */
+    set reverse(reverse: boolean) {
+        this._slider.reverse = reverse;
+    }
+    /**
+     * Get slider loop
+     * @property loop
+     */
+    get reverse(): boolean {
+        return this._slider.reverse;
+    }
+
+    /**
      * Set slider delay
      * @property delay
      */
@@ -361,7 +378,7 @@ export class SliderBar {
             // start play (it will wait the delay before doing is first step) and take snapshop if need be
             this._gifImages = [];
             this.setTakeSnapShot();
-            this._playInterval = setInterval(() => this.playInstant(this.limit.max), this.delay);
+            this._playInterval = setInterval(() => this.playInstant(this.limit.min, this.limit.max), this.delay);
         } else { this.pause(); }
     }
 
@@ -370,26 +387,52 @@ export class SliderBar {
      * @function playInstant
      * @param {Number} limitmax the max limit
      */
-    playInstant(limitmax: number): void {
+    playInstant(limitmin: number, limitmax: number): void {
         // take snapshop if need be
         this.setTakeSnapShot();
 
-        if (this._slider.range.max !== limitmax) {
-            this.step('up');
-        } else if (this._slider.loop) {
-            // slider is in loop mode, reset ranges and continue playing
-            this._slider.range.min = this.limit.min;
+        if (this._slider.reverse) {
 
-            if (this._stepType === 'dynamic') {
-                this._slider.range.max = this._slider.range.min + this._step;
-            } else if (this._stepType === 'static') {
-                const leftHandle = (this._rangeType === 'dual') ? this._slider.noUiSlider.get().map(Number)[0] : +this._slider.noUiSlider.get();;
-                const index = this.limit.staticItems.findIndex((item) => { return item === leftHandle; });
-                this._slider.range.max = this.limit.staticItems[(this.limit.staticItems.length - 1) - index];
-            }
+            if (this._slider.range.min !== limitmin) {
+                this.step('down');
+            } else if (this._slider.loop) {
+                // slider is in loop mode, reset ranges and continue playing
+                this._slider.range.max = this.limit.max;
 
-            this._slider.noUiSlider.set([this._slider.range.min, this._slider.range.max]);
-        } else { this.pause(); }
+                if (this._stepType === 'dynamic') {
+                    this._slider.range.min = this._slider.range.max - this._step;
+                } else if (this._stepType === 'static') {
+                    const leftHandle = (this._rangeType === 'dual') ? this._slider.noUiSlider.get().map(Number)[0] : +this._slider.noUiSlider.get();
+                    const index = this.limit.staticItems.findIndex((item) => { return item === leftHandle; });
+                    console.info('index => ', index)
+                    // this._slider.range.min = index === -1 ? this.limit.staticItems[(this.limit.staticItems.length - 1) - Math.max(0, index)];
+                    this._slider.range.min = (index === -1 && this._rangeType !== 'dual') ? this.limit.max : this.limit.staticItems[(this.limit.staticItems.length - 1)];
+                }
+
+                this._slider.noUiSlider.set([this._slider.range.min, this._slider.range.max]);
+            } else { this.pause(); }
+
+        } else {
+
+            if (this._slider.range.max !== limitmax) {
+                this.step('up');
+            } else if (this._slider.loop) {
+                // slider is in loop mode, reset ranges and continue playing
+                this._slider.range.min = this.limit.min;
+
+                if (this._stepType === 'dynamic') {
+                    this._slider.range.max = this._slider.range.min + this._step;
+                } else if (this._stepType === 'static') {
+                    const leftHandle = (this._rangeType === 'dual') ? this._slider.noUiSlider.get().map(Number)[0] : +this._slider.noUiSlider.get();
+                    const index = this.limit.staticItems.findIndex((item) => { return item === leftHandle; });
+                    this._slider.range.max = this.limit.staticItems[(this.limit.staticItems.length - 1) - index];
+                }
+
+                this._slider.noUiSlider.set([this._slider.range.min, this._slider.range.max]);
+            } else { this.pause(); }
+
+        }
+
     }
 
     /**
@@ -535,7 +578,7 @@ export class SliderBar {
                 range = { min: this.lock ? this._slider.range.min :
                             (stepRight !== null) ? this._slider.range.min + stepLeft: this._slider.range.min,
                         max: (stepLeft !== -0) ? this._slider.range.max + stepRight : this._slider.range.max};
-            } 
+            }
 
             this._slider.noUiSlider.set([range.min, range.max]);
         } else if (this._rangeType === 'single') {
@@ -669,7 +712,7 @@ export class SliderBar {
                     const dates = this.getDate(range, 'wmst');
                     const query = (this._rangeType === 'single') ? `${dates[0]}` : `${dates[0]}/${dates[1]}`;
                     myLayer.esriLayer.setCustomParameters({}, { 'TIME':query });
- 
+
                      // NOTE: WMS Time parameter seems to be related to how the service let the data be searched
                      // https://www.mapserver.org/ogc/wms_time.html#supported-time-requests
                      // https://geo.weather.gc.ca/geomet?SERVICE=WMS&REQUEST=GetMap&FORMAT=image/png&TRANSPARENT=TRUE&STYLES=&VERSION=1.3.0&LAYERS=RADAR_1KM_RSNO&WIDTH=2783&HEIGHT=690&CRS=EPSG:3978&BBOX=-10634186.928075515,-1179774.2916349573,11455919.752137847,4297111.6621369505&TIME=2020-09-17T16%3A50%3A00Z&_ts=1600371840628
@@ -677,7 +720,7 @@ export class SliderBar {
                      // Even if in the spec it is said we can query for the whole hour like T16, it didn't work with Geomet. Also, I can't ask for range, it needs to be a single value.
                      // https://eccc-msc.github.io/open-data/usage/tutorial_web-maps_en/#animating-time-enabled-wms-layers-with-openlayers
                      // To make some of the WMST works, we will need more parameters like the format for time parameter.
- 
+
                      // Millisend date converter: https://currentmillis.com/
                 }
             }

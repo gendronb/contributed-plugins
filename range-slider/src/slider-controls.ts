@@ -66,6 +66,18 @@ export class SliderControls {
             };
         });
 
+        mapApi.agControllerRegister('ReverseSliderCtrl', function() {
+
+            this.isReverse = slider.reverse;
+
+            // toggle reverse setting to change animation direction
+            this.reverse = () => {
+                slider.reverse = !slider.reverse;
+                this.isReverse = slider.reverse;
+            };
+
+        });
+
         mapApi.agControllerRegister('StepSliderCtrl', function() {
             // step previous or next
             this.step = (direction: string) => { slider.step(direction); }
@@ -107,7 +119,10 @@ export class SliderControls {
         const barControls = panel.body.find('.slider-controls');
 
         for (let template of templates) {
-            if (template.includes('slider-delay-control')) {
+            if (template.includes('slider-reverse-control')) {
+                // add reverse control to play control div
+                barControls.find('.slider-play-control').append(this.compileTemplate(template));
+            } else if (template.includes('slider-delay-control')) {
                 // add delay control to play control div
                 barControls.find('.slider-play-control').append(this.compileTemplate(template));
             } else if (template.includes('slider-loop-control')) {

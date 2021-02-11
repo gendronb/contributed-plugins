@@ -2,6 +2,7 @@ import {
     DESC_BAR_TEMPLATE,
     LOCK_BAR_TEMPLATE,
     LOOP_BAR_TEMPLATE,
+    REVERSE_BAR_TEMPLATE,
     PLAY_BAR_TEMPLATE,
     REFRESH_BAR_TEMPLATE,
     DELAY_BAR_TEMPLATE,
@@ -150,7 +151,7 @@ export class SliderManager {
      */
     setAttributes(attrPipe: AttributePipe, layerInfo: LayerInfo, nbLayers: number): void {
         // if there is attributes and it is the needed layer get the values
-        // if not, relaunch startAttributesEvent 
+        // if not, relaunch startAttributesEvent
         if (attrPipe.attributes.length > 0 && attrPipe.layer.id === layerInfo.id) {
             this._attRead += 1;
 
@@ -161,7 +162,7 @@ export class SliderManager {
             // set limit and range if not set from configuration. Also update if limit are higher of lower then actual values
             const limit: Range = { min: Math.min.apply(null, values), max: Math.max.apply(null, values) };
             if (this._slider.limit.min === null || this._slider.limit.min > limit.min) { this._slider.limit.min = limit.min; }
-            if (this._slider.limit.max === null || this._slider.limit.max < limit.max) { this._slider.limit.max = limit.max; } 
+            if (this._slider.limit.max === null || this._slider.limit.max < limit.max) { this._slider.limit.max = limit.max; }
             this._slider.range = this._config.range.min !== null ? this._config.range : this._slider.limit;
 
             // if all layers are set, start slider creation
@@ -170,7 +171,7 @@ export class SliderManager {
             this.startAttributesEvent(layerInfo, nbLayers)
         }
     }
-    
+
     /**
      * Set slider bar
      * @function setSliderBar
@@ -199,6 +200,7 @@ export class SliderManager {
         // add controls from configuration
         for (let ctrl of controls) {
             if (ctrl === 'lock') { templates.unshift(LOCK_BAR_TEMPLATE); }
+            else if (ctrl === 'reverse') { templates.push(REVERSE_BAR_TEMPLATE); }
             else if (ctrl === 'loop') { templates.push(LOOP_BAR_TEMPLATE); }
             else if (ctrl === 'refresh') { templates.push(REFRESH_BAR_TEMPLATE); }
             else if (ctrl === 'delay') { templates.push(DELAY_BAR_TEMPLATE); }
