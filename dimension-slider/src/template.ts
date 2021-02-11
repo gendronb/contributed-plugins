@@ -17,10 +17,10 @@ export const SLIDER_TEMPLATE = `
 export const MIN_MAX_TEMPLATE = `
 <div class="slider-bar-control slider-minmax-control" ng-controller="MinMaxSliderCtrl as ctrl">
     <md-button
-        aria-label="{{ !ctrl.isMax ? 'plugins.rangeSlider.maximize' : 'plugins.rangeSlider.minimize' | translate }}"
+        aria-label="{{ !ctrl.isMax ? 'plugins.dimensionSlider.maximize' : 'plugins.dimensionSlider.minimize' | translate }}"
         class="md-icon-button rv-button-24 slider-max-control-icon"
         ng-click="ctrl.show()">
-        <md-tooltip>{{ !ctrl.isMax ? 'plugins.rangeSlider.maximize' : 'plugins.rangeSlider.minimize' | translate }}</md-tooltip>
+        <md-tooltip>{{ !ctrl.isMax ? 'plugins.dimensionSlider.maximize' : 'plugins.dimensionSlider.minimize' | translate }}</md-tooltip>
         <md-icon md-svg-src="community:apple-keyboard-control"></md-icon>
     </md-button>
 </div>`;
@@ -29,10 +29,10 @@ export const MIN_MAX_TEMPLATE = `
 export const DESC_BAR_TEMPLATE = `
 <div class="slider-bar-control slider-desc-control" ng-controller="DescSliderCtrl as ctrl">
     <md-button
-        aria-label="{{ !ctrl.isShow ? 'plugins.rangeSlider.bar.show' : 'plugins.rangeSlider.bar.hide' | translate }}"
+        aria-label="{{ !ctrl.isShow ? 'plugins.dimensionSlider.bar.show' : 'plugins.dimensionSlider.bar.hide' | translate }}"
         class="md-icon-button primary"
         ng-click="ctrl.show()">
-        <md-tooltip>{{ !ctrl.isShow ? 'plugins.rangeSlider.bar.show' : 'plugins.rangeSlider.bar.hide' | translate }}</md-tooltip>
+        <md-tooltip>{{ !ctrl.isShow ? 'plugins.dimensionSlider.bar.show' : 'plugins.dimensionSlider.bar.hide' | translate }}</md-tooltip>
         <md-icon ng-if="ctrl.isShow">${createSVG('hide')}</md-icon>
         <md-icon ng-if="!ctrl.isShow">${createSVG('show')}</md-icon>
     </md-button>
@@ -42,11 +42,11 @@ export const DESC_BAR_TEMPLATE = `
 export const LOCK_BAR_TEMPLATE = `
 <div class="slider-bar-control slider-lock-control" ng-controller="LockSliderCtrl as ctrl">
     <md-button
-        aria-label="{{ !ctrl.isLocked ? 'plugins.rangeSlider.bar.lock' : 'plugins.rangeSlider.bar.unlock' | translate }}"
+        aria-label="{{ !ctrl.isLocked ? 'plugins.dimensionSlider.bar.lock' : 'plugins.dimensionSlider.bar.unlock' | translate }}"
         class="md-icon-button primary"
         ng-click="ctrl.lock()"
         ng-if="ctrl.isDual">
-        <md-tooltip>{{ !ctrl.isLocked ? 'plugins.rangeSlider.bar.lock' : 'plugins.rangeSlider.bar.unlock' | translate }}</md-tooltip>
+        <md-tooltip>{{ !ctrl.isLocked ? 'plugins.dimensionSlider.bar.lock' : 'plugins.dimensionSlider.bar.unlock' | translate }}</md-tooltip>
         <md-icon ng-if="ctrl.isLocked">${createSVG('lock')}</md-icon>
         <md-icon ng-if="!ctrl.isLocked">${createSVG('lockOpen')}</md-icon>
     </md-button>
@@ -55,10 +55,10 @@ export const LOCK_BAR_TEMPLATE = `
 export const LOOP_BAR_TEMPLATE = `
 <div class="slider-bar-control slider-loop-control" ng-controller="LoopSliderCtrl as ctrl">
     <md-button
-        aria-label="{{ !ctrl.isLooped ? 'plugins.rangeSlider.bar.loop' : 'plugins.rangeSlider.bar.unloop' | translate }}"
+        aria-label="{{ !ctrl.isLooped ? 'plugins.dimensionSlider.bar.loop' : 'plugins.dimensionSlider.bar.unloop' | translate }}"
         class="md-icon-button primary"
         ng-click="ctrl.loop()">
-        <md-tooltip>{{ !ctrl.isLooped ? 'plugins.rangeSlider.bar.loop' : 'plugins.rangeSlider.bar.unloop' | translate }}</md-tooltip>
+        <md-tooltip>{{ !ctrl.isLooped ? 'plugins.dimensionSlider.bar.loop' : 'plugins.dimensionSlider.bar.unloop' | translate }}</md-tooltip>
         <md-icon ng-if="ctrl.isLooped">${createSVG('loop')}</md-icon>
         <md-icon ng-if="!ctrl.isLooped">${createSVG('unloop')}</md-icon>
     </md-button>
@@ -67,12 +67,11 @@ export const LOOP_BAR_TEMPLATE = `
 export const REVERSE_BAR_TEMPLATE = `
 <div class="slider-bar-control slider-reverse-control" ng-controller="ReverseSliderCtrl as ctrl">
     <md-button
-        aria-label="{{ ctrl.isReverse ? 'plugins.rangeSlider.bar.forward' : 'plugins.rangeSlider.bar.reverse' | translate }}"
+        aria-label="{{ 'plugins.dimensionSlider.bar.reverse' | translate }}"
         class="md-icon-button primary"
         ng-click="ctrl.reverse()">
-        <md-tooltip>{{ ctrl.isReverse ? 'plugins.rangeSlider.bar.forward' : 'plugins.rangeSlider.bar.reverse' | translate }}</md-tooltip>
-        <md-icon ng-if="ctrl.isReverse">${createSVG('forward')}</md-icon>
-        <md-icon ng-if="!ctrl.isReverse">${createSVG('reverse')}</md-icon>
+        <md-tooltip>{{ 'plugins.dimensionSlider.bar.reverse' | translate }}</md-tooltip>
+        <md-icon>${createSVG('loop')}</md-icon>
     </md-button>
 </div>`;
 
@@ -80,28 +79,28 @@ export const PLAY_BAR_TEMPLATE = `
 <div class="slider-bar-control slider-play-control">
     <md-button
         ng-controller="StepSliderCtrl as ctrl"
-        aria-label="{{ 'plugins.rangeSlider.bar.previous' | translate }}"
+        aria-label="{{ 'plugins.dimensionSlider.bar.previous' | translate }}"
         class="md-icon-button primary"
         ng-click="ctrl.step('down')">
-        <md-tooltip>{{ 'plugins.rangeSlider.bar.previous' | translate }}</md-tooltip>
+        <md-tooltip>{{ 'plugins.dimensionSlider.bar.previous' | translate }}</md-tooltip>
         <md-icon>${createSVG('previous')}</md-icon>
     </md-button>
     <div ng-controller="PlaySliderCtrl as ctrl">
         <md-button
-            aria-label="{{ ctrl.isPlaying ? 'plugins.rangeSlider.bar.pause' : 'plugins.rangeSlider.bar.play' | translate }}"
+            aria-label="{{ ctrl.isPlaying ? 'plugins.dimensionSlider.bar.pause' : 'plugins.dimensionSlider.bar.play' | translate }}"
             class="md-icon-button primary"
             ng-click="ctrl.play()">
-            <md-tooltip>{{ ctrl.isPlaying ? 'plugins.rangeSlider.bar.pause' : 'plugins.rangeSlider.bar.play' | translate }}</md-tooltip>
+            <md-tooltip>{{ ctrl.isPlaying ? 'plugins.dimensionSlider.bar.pause' : 'plugins.dimensionSlider.bar.play' | translate }}</md-tooltip>
             <md-icon ng-if="ctrl.isPlaying">${createSVG('pause')}</md-icon>
             <md-icon ng-if="!ctrl.isPlaying">${createSVG('play')}</md-icon>
         </md-button>
     </div>
     <md-button
         ng-controller="StepSliderCtrl as ctrl"
-        aria-label="{{ 'plugins.rangeSlider.bar.foward' | translate }}"
+        aria-label="{{ 'plugins.dimensionSlider.bar.foward' | translate }}"
         class="md-icon-button primary"
         ng-click="ctrl.step('up')">
-        <md-tooltip>{{ 'plugins.rangeSlider.bar.foward' | translate }}</md-tooltip>
+        <md-tooltip>{{ 'plugins.dimensionSlider.bar.foward' | translate }}</md-tooltip>
         <md-icon>${createSVG('next')}</md-icon>
     </md-button>
 </div>`;
@@ -110,10 +109,10 @@ export const REFRESH_BAR_TEMPLATE = `
 <div class="slider-bar-control slider-refresh-control">
     <md-button
         ng-controller="RefreshSliderCtrl as ctrl"
-        aria-label="{{ 'plugins.rangeSlider.bar.refresh' | translate }}"
+        aria-label="{{ 'plugins.dimensionSlider.bar.refresh' | translate }}"
         class="md-icon-button primary rv-slider-refresh"
         ng-click="ctrl.refresh()">
-        <md-tooltip>{{ 'plugins.rangeSlider.bar.refresh' | translate }}</md-tooltip>
+        <md-tooltip>{{ 'plugins.dimensionSlider.bar.refresh' | translate }}</md-tooltip>
         <md-icon>${createSVG('refresh')}</md-icon>
     </md-button>
 </div>`;
@@ -121,9 +120,9 @@ export const REFRESH_BAR_TEMPLATE = `
 export const DELAY_BAR_TEMPLATE = `
 <div ng-controller="DelaySliderCtrl as ctrl" class="slider-bar-control slider-delay-control">
     <md-input-container class="md-block" md-no-float flex>
-        <label>{{ 'plugins.rangeSlider.bar.delay' | translate }}</label>
+        <label>{{ 'plugins.dimensionSlider.bar.delay' | translate }}</label>
         <md-select
-            aria-label="{{ 'plugins.rangeSlider.bar.delay' | translate }}"
+            aria-label="{{ 'plugins.dimensionSlider.bar.delay' | translate }}"
             ng-model="ctrl.selectedDelay"
             ng-change="ctrl.selectDelay()">
             <md-option ng-repeat="(key, value) in { 1000: '1 sec', 2000: '2 sec', 3000: '3 sec', 4000: '4 sec', 5000: '5 sec', 6000: '6 sec', 7000: '7 sec' }" ng-value="{{ key }}">
@@ -138,14 +137,14 @@ export const EXPORT_BAR_TEMPLATE = `
     <span>
         <md-switch
             ng-controller="ExportSliderCtrl as ctrl"
-            aria-label="{{ 'plugins.rangeSlider.bar.tooltip.gif' | translate }}"
+            aria-label="{{ 'plugins.dimensionSlider.bar.tooltip.gif' | translate }}"
             class="rv-slider-switch"
             ng-class="md-primary"
             ng-model="ctrl.export"
             ng-change="ctrl.selectExport()">
-            <label>{{ 'plugins.rangeSlider.bar.gif' | translate }}</label>
+            <label>{{ 'plugins.dimensionSlider.bar.gif' | translate }}</label>
         </md-switch>
-        <md-tooltip>{{ 'plugins.rangeSlider.bar.tooltip.gif' | translate }}</md-tooltip>
+        <md-tooltip>{{ 'plugins.dimensionSlider.bar.tooltip.gif' | translate }}</md-tooltip>
     </span>
 </div>`;
 
@@ -156,8 +155,6 @@ function createSVG(icon): string {
         'lock': '<path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"></path>',
         'lockOpen': '<path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6h1.9c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm0 12H6V10h12v10z"></path>',
         'loop': '<path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"></path>',
-        'reverse': '<path d="M8.5,8.62v6.76L5.12,12L8.5,8.62 M10,5l-7,7l7,7V5L10,5z M14,5v14l7-7L14,5z"/>',
-        'forward': '<path d="M15.5,15.38V8.62L18.88,12L15.5,15.38 M14,19l7-7l-7-7V19L14,19z M10,19V5l-7,7L10,19z"/>',
         'unloop': '<g><line id="svg_1" y2="21" x2="21" y1="3" x1="3" stroke-width="1.5" stroke="#607d8b" fill="none"/></g><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"></path>',
         'next': '<path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"></path>',
         'previous': '<path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"></path>',

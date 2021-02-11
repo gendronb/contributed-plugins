@@ -8,6 +8,11 @@ const domtoimage = require('dom-to-image');
 const gifshot = require('gifshot');
 const FileSaver = require('file-saver');
 
+const dayjs = require('dayjs');
+const utc = require('dayjs/plugin/utc');
+
+dayjs.extend(utc);
+
 export class SliderBar {
     private _slider: any;
     private _mapApi: any;
@@ -59,8 +64,6 @@ export class SliderBar {
         this._slider.range = config.range;
         this._slider.export = config.export;
 
-        this._slider.reverse = false;
-
         // set range and limits information. Will help to set the different slider (range (single or dual) and limit (dynamic or static))
         this._stepType = config.stepType;
         this._rangeType = config.rangeType;
@@ -68,7 +71,11 @@ export class SliderBar {
         this._intervalUnit = config.intervalUnit;
 
         // set units label value
-        document.getElementsByClassName('slider-units')[0].textContent = config.units;
+        if (config.units) {
+            document.getElementsByClassName('slider-units')[0].textContent = config.units;
+        } else {
+            document.getElementsByClassName('slider-bar')[0].classList.add('no-units');
+        }
     }
 
     /**
@@ -101,6 +108,8 @@ export class SliderBar {
 
         // remove overlapping pips. This can happen often with static limits and date
         const items = $('.noUi-value');
+        const markers = $('.noUi-marker');
+
         let curIndex = 0;
         let testIndex = 1;
         // loop until are pips are not tested
@@ -114,6 +123,8 @@ export class SliderBar {
             // if there is a collision, set display none and test with the next pips
             if (ox && oy) {
                 items[testIndex].style.display = 'none';
+                markers[testIndex].style.height = "12px";
+                markers[testIndex].style.backgroundColor = "#ccc";
                 testIndex++;
             } else {
                 // if there is no  collision and reset the curIndex to be the one before the testIndex
@@ -207,15 +218,21 @@ export class SliderBar {
      * @return {any} value the formated value
      */
     formatPips(value: any, field: string, lang: string): any {
+
         if (field === 'number') {
             value = (Math.round(value * 100) / 100).toFixed(this._precision);
+
         } else if (field === 'date' || field === 'wmst') {
-            let date = new Date(value);
+
+            let date = dayjs.utc(value);
+            let dateTimeFormat = this._config.dateTimeFormat || 'YYYY-MM-DD';
 
             if (lang === 'en-FR') {
-                value = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+                value = date.format(dateTimeFormat);
+                // value = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
             } else {
-                value = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+                value = date.format(dateTimeFormat);
+                //value = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
             }
 
             // if hours, add it to the label and change margin so label are inside
@@ -223,6 +240,7 @@ export class SliderBar {
                 value += ` - ${date.getHours()}:${((date.getMinutes() + 1).toString() as any).padStart(2, '0')}:${((date.getSeconds() + 1).toString() as any).padStart(2, '0')}`;
                 $('.slider-bar')[0].style.paddingLeft = '60px';
             }
+
         }
 
         return value;
@@ -321,21 +339,6 @@ export class SliderBar {
     }
 
     /**
-     * Set slider reverse
-     * @property reverse
-     */
-    set reverse(reverse: boolean) {
-        this._slider.reverse = reverse;
-    }
-    /**
-     * Get slider loop
-     * @property loop
-     */
-    get reverse(): boolean {
-        return this._slider.reverse;
-    }
-
-    /**
      * Set slider delay
      * @property delay
      */
@@ -378,7 +381,7 @@ export class SliderBar {
             // start play (it will wait the delay before doing is first step) and take snapshop if need be
             this._gifImages = [];
             this.setTakeSnapShot();
-            this._playInterval = setInterval(() => this.playInstant(this.limit.min, this.limit.max), this.delay);
+            this._playInterval = setInterval(() => this.playInstant(this.limit.max), this.delay);
         } else { this.pause(); }
     }
 
@@ -387,52 +390,26 @@ export class SliderBar {
      * @function playInstant
      * @param {Number} limitmax the max limit
      */
-    playInstant(limitmin: number, limitmax: number): void {
+    playInstant(limitmax: number): void {
         // take snapshop if need be
         this.setTakeSnapShot();
 
-        if (this._slider.reverse) {
+        if (this._slider.range.max !== limitmax) {
+            this.step('up');
+        } else if (this._slider.loop) {
+            // slider is in loop mode, reset ranges and continue playing
+            this._slider.range.min = this.limit.min;
 
-            if (this._slider.range.min !== limitmin) {
-                this.step('down');
-            } else if (this._slider.loop) {
-                // slider is in loop mode, reset ranges and continue playing
-                this._slider.range.max = this.limit.max;
+            if (this._stepType === 'dynamic') {
+                this._slider.range.max = this._slider.range.min + this._step;
+            } else if (this._stepType === 'static') {
+                const leftHandle = (this._rangeType === 'dual') ? this._slider.noUiSlider.get().map(Number)[0] : +this._slider.noUiSlider.get();;
+                const index = this.limit.staticItems.findIndex((item) => { return item === leftHandle; });
+                this._slider.range.max = this.limit.staticItems[(this.limit.staticItems.length - 1) - index];
+            }
 
-                if (this._stepType === 'dynamic') {
-                    this._slider.range.min = this._slider.range.max - this._step;
-                } else if (this._stepType === 'static') {
-                    const leftHandle = (this._rangeType === 'dual') ? this._slider.noUiSlider.get().map(Number)[0] : +this._slider.noUiSlider.get();
-                    const index = this.limit.staticItems.findIndex((item) => { return item === leftHandle; });
-                    console.info('index => ', index)
-                    // this._slider.range.min = index === -1 ? this.limit.staticItems[(this.limit.staticItems.length - 1) - Math.max(0, index)];
-                    this._slider.range.min = (index === -1 && this._rangeType !== 'dual') ? this.limit.max : this.limit.staticItems[(this.limit.staticItems.length - 1)];
-                }
-
-                this._slider.noUiSlider.set([this._slider.range.min, this._slider.range.max]);
-            } else { this.pause(); }
-
-        } else {
-
-            if (this._slider.range.max !== limitmax) {
-                this.step('up');
-            } else if (this._slider.loop) {
-                // slider is in loop mode, reset ranges and continue playing
-                this._slider.range.min = this.limit.min;
-
-                if (this._stepType === 'dynamic') {
-                    this._slider.range.max = this._slider.range.min + this._step;
-                } else if (this._stepType === 'static') {
-                    const leftHandle = (this._rangeType === 'dual') ? this._slider.noUiSlider.get().map(Number)[0] : +this._slider.noUiSlider.get();
-                    const index = this.limit.staticItems.findIndex((item) => { return item === leftHandle; });
-                    this._slider.range.max = this.limit.staticItems[(this.limit.staticItems.length - 1) - index];
-                }
-
-                this._slider.noUiSlider.set([this._slider.range.min, this._slider.range.max]);
-            } else { this.pause(); }
-
-        }
-
+            this._slider.noUiSlider.set([this._slider.range.min, this._slider.range.max]);
+        } else { this.pause(); }
     }
 
     /**
@@ -709,9 +686,17 @@ export class SliderBar {
                     myLayer.esriLayer.setCustomParameters({}, { 'layerDefs':
                         `{'${myLayer._viewerLayer._defaultFC}': \"${layer.field} >= DATE '${dates[0]}' AND ${layer.field} <= DATE '${dates[1]}'\"}` });
                 } else if (this._config.type === 'wmst') {
+
+                    let dimensionName = (this._config.dimensionName || 'time');
+                    let customParameters = {}
+
                     const dates = this.getDate(range, 'wmst');
                     const query = (this._rangeType === 'single') ? `${dates[0]}` : `${dates[0]}/${dates[1]}`;
-                    myLayer.esriLayer.setCustomParameters({}, { 'TIME':query });
+
+                    let wmsDimensionName = ['time', 'elevation'].includes(dimensionName) ? dimensionName.toUpperCase() : `dim_${dimensionName}`.toUpperCase();
+                    customParameters[wmsDimensionName] = query;
+
+                    myLayer.esriLayer.setCustomParameters({}, customParameters);
 
                      // NOTE: WMS Time parameter seems to be related to how the service let the data be searched
                      // https://www.mapserver.org/ogc/wms_time.html#supported-time-requests
@@ -735,8 +720,10 @@ export class SliderBar {
      * @return {String[]} Array of string date  from date object
      */
     getDate(range: Range, type: string = 'esri'): string[] {
-        const min = new Date(range.min);
-        const max = new Date (range.max);
+        const min = dayjs.utc(range.min).toDate();
+        const max = dayjs.utc(range.max).toDate();
+
+        // console.info("min => ", min.valueOf())
 
         let dateMin = '';
         let dateMax = '';
@@ -768,6 +755,9 @@ export class SliderBar {
      * @return {String}formated date
      */
     getDateWMTS(date: Date): string {
-        return `${date.getFullYear()}-${((date.getMonth() + 1).toString() as any).padStart(2, '0')}-${(date.getDate().toString() as any).padStart(2, '0')}T${(date.getHours().toString() as any).padStart(2, '0')}:${(date.getMinutes().toString() as any).padStart(2, '0')}:${(date.getSeconds().toString() as any).padStart(2, '0')}Z`;
+        //let wmsDate = `${date.getFullYear()}-${((date.getMonth() + 1).toString() as any).padStart(2, '0')}-${(date.getDate().toString() as any).padStart(2, '0')}T${(date.getHours().toString() as any).padStart(2, '0')}:${(date.getMinutes().toString() as any).padStart(2, '0')}:${(date.getSeconds().toString() as any).padStart(2, '0')}Z`;
+        let wmsDate = dayjs.utc(date).format();
+        // console.info('wmsDate =>', wmsDate);
+        return wmsDate;
     }
 }

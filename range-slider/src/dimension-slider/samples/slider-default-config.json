@@ -271,11 +271,11 @@
       ]
     },
     "plugins": {
-      "rangeSlider": {
+      "dimensionSlider": {
         "open": true,
         "autorun": false,
         "loop": false,
-        "controls": ["lock", "loop", "refresh", "reverse"],
+        "controls": ["lock", "delay", "refresh"],
         "params": {
           "delay": 3000,
           "type": "number",

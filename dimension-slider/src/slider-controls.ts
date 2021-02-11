@@ -36,8 +36,8 @@ export class SliderControls {
                 this.isShow = !this.isShow;
 
                 const slider = document.getElementById('rangeSlider');
-                slider.style.height = (this.isShow) ? '185px' : '125px';
-                slider.style.top = (this.isShow) ? 'calc(100% - 245px)' : 'calc(100% - 185px)';
+                slider.style.height = (this.isShow) ? '200px' : '140px';
+                slider.style.top = (this.isShow) ? 'calc(100% - 260px)' : 'calc(100% - 200px)';
             };
         });
 
@@ -67,15 +67,8 @@ export class SliderControls {
         });
 
         mapApi.agControllerRegister('ReverseSliderCtrl', function() {
-
-            this.isReverse = slider.reverse;
-
-            // toggle reverse setting to change animation direction
-            this.reverse = () => {
-                slider.reverse = !slider.reverse;
-                this.isReverse = slider.reverse;
-            };
-
+            // TODO: implement
+            // this.step = (direction: string) => { slider.step(direction); }
         });
 
         mapApi.agControllerRegister('StepSliderCtrl', function() {
@@ -119,15 +112,15 @@ export class SliderControls {
         const barControls = panel.body.find('.slider-controls');
 
         for (let template of templates) {
-            if (template.includes('slider-reverse-control')) {
-                // add reverse control to play control div
-                barControls.find('.slider-play-control').append(this.compileTemplate(template));
-            } else if (template.includes('slider-delay-control')) {
+            if (template.includes('slider-delay-control')) {
                 // add delay control to play control div
                 barControls.find('.slider-play-control').append(this.compileTemplate(template));
             } else if (template.includes('slider-loop-control')) {
                 // add loop control to play control div
                 barControls.find('.slider-play-control').prepend(this.compileTemplate(template));
+            } else if (template.includes('slider-reverse-control')) {
+                // add reverse control to play control div
+                barControls.find('.slider-play-control').append(this.compileTemplate(template));
             } else if (template.includes('slider-export-control')) {
                 // detect browser because Safari and IE does not support export GIF
                 const browser = detect();

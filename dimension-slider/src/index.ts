@@ -1,9 +1,8 @@
 import { SLIDER_TEMPLATE } from './template';
 import { SliderManager } from './slider-manager';
 
-export default class RangeSlider {
+export default class DimensionSlider {
     private _button: any;
-
 
     /**
     * Plugin init
@@ -14,30 +13,17 @@ export default class RangeSlider {
         this.mapApi = mapApi;
 
         // create panel
-        this.panel = this.mapApi.panels.create('rangeSlider');
-        this.panel.element.css(RangeSlider.prototype.panelOptions);
+        this.panel = this.mapApi.panels.create('rangeSlider'); // Re-using range-slider panel name to keep css styling
+        this.panel.element.css(DimensionSlider.prototype.panelOptions);
         this.panel.body = SLIDER_TEMPLATE;
 
         // get slider configuration then add/merge needed configuration
-        const config = this._RV.getConfig('plugins').rangeSlider;
-
-        let extendConfig: any = {}
-        if (typeof config !== 'undefined') {
-            extendConfig = { ...RangeSlider.prototype.layerOptions, ...config.params };
-            extendConfig.controls = config.controls;
-            extendConfig.layers = config.layers;
-            extendConfig.open = config.open;
-            extendConfig.loop = config.loop;
-            extendConfig.autorun = config.autorun;
-        } else {
-            extendConfig = RangeSlider.prototype.layerOptions;
-        }
-        extendConfig.language = this._RV.getCurrentLang();
-        extendConfig.translations = RangeSlider.prototype.translations[this._RV.getCurrentLang()];
+        const config = this._RV.getConfig('plugins').dimensionSlider;
+        let extendConfig = this.parseConfig(config);
 
         // side menu button
         this._button = this.mapApi.mapI.addPluginButton(
-            RangeSlider.prototype.translations[this._RV.getCurrentLang()].title, this.onMenuItemClick()
+            DimensionSlider.prototype.translations[this._RV.getCurrentLang()].title, this.onMenuItemClick()
         );
         if (extendConfig.open) { this._button.isActive = true; }
 
@@ -59,9 +45,49 @@ export default class RangeSlider {
             this._button.isActive ? this.panel.open() : this.panel.close();
         };
     }
+
+    parseConfig(config) {
+
+        let extendConfig: any = {}
+
+        if (typeof config !== 'undefined') {
+
+            extendConfig = { ...DimensionSlider.prototype.layerOptions, ...config.params };
+
+            // TODO - Refactor... crashed if config does not include these...
+            // let configKeys = ['controls', 'open', 'loop', 'autorun', 'reverse']
+            extendConfig.controls = config.controls;
+            extendConfig.open = config.open;
+            extendConfig.loop = config.loop;
+            extendConfig.autorun = config.autorun;
+
+            extendConfig.layers = config.layers;
+
+            // Override config
+            extendConfig.dimensionName = 'time'; // only dimension supported for now
+
+            // Override range-slider params to fit
+            // more specific requirements of dimension-slider
+            extendConfig.type = 'wmst';
+            extendConfig.stepType = 'static';
+            extendConfig.rangeType = 'single'; // default, will be set later when capabitilies are parsed
+            extendConfig.precision = 'date';
+            extendConfig.units = null;
+
+        } else {
+            extendConfig = DimensionSlider.prototype.layerOptions;
+        }
+
+        extendConfig.language = this._RV.getCurrentLang();
+        extendConfig.translations = DimensionSlider.prototype.translations[this._RV.getCurrentLang()];
+
+        return extendConfig
+
+    }
+
 }
 
-export default interface RangeSlider {
+export default interface DimensionSlider {
     mapApi: any,
     _RV: any,
     translations: any,
@@ -76,36 +102,37 @@ export interface Range {
     staticItems?: number[]
 }
 
-RangeSlider.prototype.panelOptions = {
+DimensionSlider.prototype.panelOptions = {
     top: 'calc(100% - 245px)',
     height: '185px',
     'margin-right': '60px',
     'margin-left': '420px'
 };
 
-RangeSlider.prototype.layerOptions = {
+DimensionSlider.prototype.layerOptions = {
+
+    // UI and behavior-related options
     open: true,
+    controls: ['lock', 'loop', 'delay', 'refresh'],
     autorun: false,
     loop: false,
-    precision: '0',
     delay: 3000,
     lock: false,
     export: false,
-    rangeType: 'dual',
-    stepType: 'dynamic',
-    interval: 0,
-    intervalUnit: 'year',
-    range: { min: null, max: null },
-    limit: { min: null, max: null },
-    limits: [],
-    type: 'date',
+
+    // layer and data-related options
+    dimensionName: 'time', // only dimension currently supported, will be overriden when parsed anyway
+    multipleValues: false, // will be overriden when parsed if capabitilies does not support multiple values
+    default: null, // starting value, will use default value from capabitilies if defined, otherwise will default to minimum extent value
+    dateTimeFormat: null,
+
     layers: [],
-    controls: ['lock', 'loop', 'delay', 'refresh']
+
 };
 
-RangeSlider.prototype.translations = {
+DimensionSlider.prototype.translations = {
     'en-CA': {
-        title: 'Range Slider',
+        title: 'Dimension Slider',
         minimize: 'Minimize the slider interface',
         maximize: 'Maximize the slider interface',
         bar: {
@@ -115,8 +142,6 @@ RangeSlider.prototype.translations = {
             unlock: 'Unlock left anchor',
             loop: 'Animate in loop',
             unloop: 'Do not animate in loop',
-            forward: 'Animate forward',
-            reverse: 'Animate backward',
             previous: 'Previous',
             play: 'Play',
             pause: 'Pause',
@@ -132,18 +157,16 @@ RangeSlider.prototype.translations = {
     },
 
     'fr-CA': {
-        title: 'Curseur de plage',
+        title: 'Curseur de dimension',
         minimize: 'Minimiser l\'interface du curseur',
         maximize: 'Maximizer l\'interface du curseur',
         bar: {
-            show: 'Afficher l\'information du curseur de plage',
-            hide: 'Cacher l\'information du curseur de plage',
+            show: 'Afficher l\'information du curseur de dimension',
+            hide: 'Cacher l\'information du curseur de dimension',
             lock: 'Verrouiller la molette gauche',
             unlock: 'Déverrouiller la molette gauche',
             loop: 'Animer en boucle',
             unloop: 'Ne pas animer en boucle',
-            forward: 'Animer normalement',
-            reverse: 'Animer à rebours',
             previous: 'Précédent',
             play: 'Jouer',
             pause: 'Pause',
@@ -159,4 +182,4 @@ RangeSlider.prototype.translations = {
     }
 };
 
-(<any>window).rangeSlider = RangeSlider;
+(<any>window).dimensionSlider = DimensionSlider;

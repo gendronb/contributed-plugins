@@ -269,7 +269,7 @@
         "open": true,
         "autorun": false,
         "loop": false,
-        "controls": ["lock", "delay", "refresh", "loop"],
+        "controls": ["lock", "reverse", "refresh", "loop"],
         "params": {
           "delay": 3000,
           "type": "number",

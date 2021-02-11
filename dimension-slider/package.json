@@ -1,12 +1,12 @@
 {
-    "name": "range-slider",
+    "name": "dimension-slider",
     "version": "0.1.0",
     "description": "",
     "author": "NRCan - CCMEO - FGP",
     "license": "MIT",
-    "homepage": "https://github.com/fgpv-vpgf/contributed-plugins/range-slider#readme",
+    "homepage": "https://github.com/fgpv-vpgf/contributed-plugins/dimension-slider#readme",
     "keywords": [
-        "range slider",
+        "dimension slider",
         "plugins",
         "RAMP"
     ],
@@ -22,22 +22,24 @@
     },
     "scripts": {
         "build": "webpack --mode=production --config=webpack.config.js && npm run sass",
-        "build:dimension": "webpack --mode=production --config=webpack.dimension.config.js && npm run sass:dimension",
         "serve": "webpack serve --progress --hot --mode=development --config webpack.config.js",
-        "serve:dimension": "webpack serve --progress --hot --mode=development --config webpack.dimension.config.js",
         "sass": "bash ./compileSass.sh",
-        "sass:dimension": "bash ./compileSassDimension.sh",
         "deploy": "gh-pages -d ../dist"
     },
     "dependencies": {
         "ag-grid-community": "19.0.0",
+        "buffer": "^6.0.3",
+        "dayjs": "^1.10.4",
         "detect-browser": "5.1.0",
         "dom-to-image": "2.6.0",
         "file-saver": "1.3.8",
         "gh-pages": "2.2.0",
         "gifshot": "0.4.5",
         "nouislider": "13.1.5",
-        "rxjs": "6.4.0"
+        "rxjs": "6.4.0",
+        "stream-browserify": "^3.0.0",
+        "timers-browserify": "^2.0.12",
+        "xml2js": "^0.4.23"
     },
     "devDependencies": {
         "@types/jquery": "3.3.29",
