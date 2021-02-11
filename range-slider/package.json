@@ -25,8 +25,8 @@
         "build:dimension": "webpack --mode=production --config=webpack.dimension.config.js && npm run sass:dimension",
         "serve": "webpack serve --progress --hot --mode=development --config webpack.config.js",
         "serve:dimension": "webpack serve --progress --hot --mode=development --config webpack.dimension.config.js",
-        "sass": "bash ./compileSass.sh",
-        "sass:dimension": "bash ./compileSassDimension.sh",
+        "sass": "bash ./src/compileSass.sh",
+        "sass:dimension": "bash ./src/dimension-slider/compileSass.sh",
         "deploy": "gh-pages -d ../dist"
     },
     "dependencies": {
