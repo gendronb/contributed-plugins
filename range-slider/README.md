@@ -40,6 +40,7 @@ Configuration parameters
 - controls: string array who contains needed controls. Order inside the array has no effect.
     - lock: lock or unlock left anchor when step or play
     - loop: loop the animation
+    - reverse: toggle direction of animation (forward / backward)
     - delay: add a dropdown menu to change the delay in play animation
     - export: ability to export the animation to a GIF
     - refresh: reset the slider with the default values
