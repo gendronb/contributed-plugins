@@ -1,0 +1,59 @@
+.LayerSwipe {
+  position: absolute;
+  width: 100%;
+  height: 100%; }
+  .LayerSwipe .handleContainer {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 1; }
+  .LayerSwipe .vertical:before {
+    content: "";
+    display: block;
+    position: absolute;
+    background-color: rgba(50, 50, 50, 0.75);
+    left: 5px;
+    height: 100%;
+    width: 1px; }
+  .LayerSwipe .vertical {
+    position: absolute;
+    background-color: rgba(50, 50, 50, 0.75);
+    z-index: 30;
+    -moz-box-sizing: content-box;
+    -webkit-box-sizing: content-box;
+    box-sizing: content-box;
+    margin: 0;
+    padding: 0 !important;
+    width: 11px;
+    height: 100%;
+    cursor: col-resize;
+    top: 0px !important; }
+    .LayerSwipe .vertical .handle:before {
+      margin-right: 11px; }
+    .LayerSwipe .vertical .handle:before, .LayerSwipe .vertical .handle:after {
+      display: block;
+      float: left;
+      text-align: center;
+      background-color: rgba(50, 50, 50, 0.75);
+      color: #fff;
+      content: "\268C";
+      width: 20px;
+      height: 24px;
+      line-height: 2;
+      transform: rotate(90deg); }
+    .LayerSwipe .vertical .handle {
+      position: absolute;
+      z-index: 30;
+      speak: none;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-size: 12px;
+      width: 51px;
+      height: 24px;
+      margin-top: -12px;
+      margin-left: -20px;
+      top: 50%;
+      left: 0; }
+  .LayerSwipe .vertical:hover {
+    filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=75);
+    opacity: 0.75; }
