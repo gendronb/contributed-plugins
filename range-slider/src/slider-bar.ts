@@ -328,8 +328,8 @@ export class SliderBar {
         this._slider.reverse = reverse;
     }
     /**
-     * Get slider loop
-     * @property loop
+     * Get slider reverse
+     * @property reverse
      */
     get reverse(): boolean {
         return this._slider.reverse;
@@ -385,6 +385,7 @@ export class SliderBar {
     /**
      * Loop play until the max limit is reach
      * @function playInstant
+     * @param {Number} limitmin the min limit
      * @param {Number} limitmax the max limit
      */
     playInstant(limitmin: number, limitmax: number): void {
@@ -404,8 +405,6 @@ export class SliderBar {
                 } else if (this._stepType === 'static') {
                     const leftHandle = (this._rangeType === 'dual') ? this._slider.noUiSlider.get().map(Number)[0] : +this._slider.noUiSlider.get();
                     const index = this.limit.staticItems.findIndex((item) => { return item === leftHandle; });
-                    console.info('index => ', index)
-                    // this._slider.range.min = index === -1 ? this.limit.staticItems[(this.limit.staticItems.length - 1) - Math.max(0, index)];
                     this._slider.range.min = (index === -1 && this._rangeType !== 'dual') ? this.limit.max : this.limit.staticItems[(this.limit.staticItems.length - 1)];
                 }
 
