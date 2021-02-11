@@ -881,44 +881,26 @@
   "plugins": {
     "dimensionSlider": {
       "enable": true,
+      "autorun": false,
+      "loop": false,
       "open": true,
       "controls": [
         "lock",
+        "reverse",
         "loop"
       ],
       "params": {
-        "type": "wmst",
-        "delay": "3000",
-        "rangeType": "single",
-        "stepType": "static",
-        "precision": "date",
-        "range": {
-          "min": -631134000000,
-          "max": 0
-        },
-        "limit": {
-          "min": -631134000000,
-          "max": 378709200000,
-          "staticItems": [
-            -347137200000,
-            -94676400000,
-            63090000000,
-            252478800000
-          ]
-        },
-        "units": "",
-        "description": ""
+        "multipleValues": false,
+        "dateTimeFormat": "YYYY",
+        "default": "1950-01-01T00:00:00Z",
+        "extent": "1932-01-01T00:00:00Z, 1947-01-01T00:00:00Z, 1950-01-01T00:00:00Z, 1959-01-01T00:00:00Z, 1960-01-01T00:00:00Z, 1967-01-01T00:00:00Z, 1972-01-01T00:00:00Z, 1974-01-01T00:00:00Z, 1977-01-01T00:00:00Z, 1978-01-01T00:00:00Z, 1982-01-01T00:00:00Z"
       },
-      "autorun": false,
-      "loop": false,
       "layers": [
         {
-          "id": "NAPL data over Salish region",
-          "field": "DATE"
+          "id": "NAPL data over Salish region"
         },
         {
-          "id": "NAPL data over Regina region",
-          "field": "DATE"
+          "id": "NAPL data over Regina region"
         }
       ]
     },

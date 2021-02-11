@@ -24,8 +24,8 @@ export class SliderControls {
 
             this.show = () => {
                 this.isMax = !this.isMax;
-                document.getElementById('dimensionSlider').parentElement.classList.toggle('slider-min-ui');
-                document.getElementById('dimensionSlider').getElementsByClassName('slider-minmax-control')[0].children[0].classList.toggle('slider-max-control-icon');
+                document.getElementById('rangeSlider').parentElement.classList.toggle('slider-min-ui');
+                document.getElementById('rangeSlider').getElementsByClassName('slider-minmax-control')[0].children[0].classList.toggle('slider-max-control-icon');
             };
         });
 
@@ -35,9 +35,9 @@ export class SliderControls {
             this.show = () => {
                 this.isShow = !this.isShow;
 
-                const slider = document.getElementById('dimensionSlider');
-                slider.style.height = (this.isShow) ? '185px' : '125px';
-                slider.style.top = (this.isShow) ? 'calc(100% - 245px)' : 'calc(100% - 185px)';
+                const slider = document.getElementById('rangeSlider');
+                slider.style.height = (this.isShow) ? '200px' : '140px';
+                slider.style.top = (this.isShow) ? 'calc(100% - 260px)' : 'calc(100% - 200px)';
             };
         });
 
@@ -64,6 +64,11 @@ export class SliderControls {
                 const elem = mapApi.fgpMapObj.esriMap.root.parentElement.parentElement.getElementsByClassName('slider-loop-control')[0];
                 elem.getElementsByTagName('md-icon')[0].classList.toggle('slider-loop-control-active');
             };
+        });
+
+        mapApi.agControllerRegister('ReverseSliderCtrl', function() {
+            // TODO: implement
+            // this.step = (direction: string) => { slider.step(direction); }
         });
 
         mapApi.agControllerRegister('StepSliderCtrl', function() {
@@ -113,6 +118,9 @@ export class SliderControls {
             } else if (template.includes('slider-loop-control')) {
                 // add loop control to play control div
                 barControls.find('.slider-play-control').prepend(this.compileTemplate(template));
+            } else if (template.includes('slider-reverse-control')) {
+                // add reverse control to play control div
+                barControls.find('.slider-play-control').append(this.compileTemplate(template));
             } else if (template.includes('slider-export-control')) {
                 // detect browser because Safari and IE does not support export GIF
                 const browser = detect();
