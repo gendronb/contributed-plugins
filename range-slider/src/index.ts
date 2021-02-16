@@ -2,7 +2,7 @@ import { SLIDER_TEMPLATE } from './template';
 import { SliderManager } from './slider-manager';
 
 export default class RangeSlider {
-    private _button: any;
+    protected _button: any;
 
 
     /**
