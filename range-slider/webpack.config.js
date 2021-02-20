@@ -17,7 +17,7 @@ module.exports = function (variable = {}, argv) {
     },
 
     resolve: {
-      extensions: ['.ts', '.js', '.css', '.scss']
+      extensions: ['.ts', '.js', '.css', '.scss'],
     },
 
     module: {

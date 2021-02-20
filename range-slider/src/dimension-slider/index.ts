@@ -1,18 +1,20 @@
-import { SLIDER_TEMPLATE } from '../template';
-import { SliderManager } from '../slider-manager';
+import { SLIDER_TEMPLATE } from './template';
+import { SliderManager } from './slider-manager';
 
-import RangeSlider from '../index'
+export default class DimensionSlider {
+    private _button: any;
 
-export default class DimensionSlider extends RangeSlider {
-
-    // private _button: any;
-
+    /**
+    * Plugin init
+    * @function init
+    * @param {Any} mapApi the viewer api
+    */
     init(mapApi: any) {
         this.mapApi = mapApi;
 
         // create panel
-        this.panel = this.mapApi.panels.create('rangeSlider');
-        this.panel.element.css(RangeSlider.prototype.panelOptions);
+        this.panel = this.mapApi.panels.create('dimensionSlider');
+        this.panel.element.css(DimensionSlider.prototype.panelOptions);
         this.panel.body = SLIDER_TEMPLATE;
 
         // get slider configuration then add/merge needed configuration
@@ -45,76 +47,33 @@ export default class DimensionSlider extends RangeSlider {
         });
     }
 
-  //   /**
-  //   * Plugin init
-  //   * @function init
-  //   * @param {Any} mapApi the viewer api
-  //   */
-  //   init(mapApi: any) {
-  //       this.mapApi = mapApi;
-
-  //       // create panel
-  //       this.panel = this.mapApi.panels.create('rangeSlider');
-  //       this.panel.element.css(RangeSlider.prototype.panelOptions);
-  //       this.panel.body = SLIDER_TEMPLATE;
-
-  //       // get slider configuration then add/merge needed configuration
-  //       const config = this._RV.getConfig('plugins').rangeSlider;
-
-  //       let extendConfig: any = {}
-  //       if (typeof config !== 'undefined') {
-  //           extendConfig = { ...RangeSlider.prototype.layerOptions, ...config.params };
-  //           extendConfig.controls = config.controls;
-  //           extendConfig.layers = config.layers;
-  //           extendConfig.open = config.open;
-  //           extendConfig.loop = config.loop;
-  //           extendConfig.autorun = config.autorun;
-  //       } else {
-  //           extendConfig = RangeSlider.prototype.layerOptions;
-  //       }
-  //       extendConfig.language = this._RV.getCurrentLang();
-  //       extendConfig.translations = RangeSlider.prototype.translations[this._RV.getCurrentLang()];
-
-  //       // side menu button
-  //       this._button = this.mapApi.mapI.addPluginButton(
-  //           RangeSlider.prototype.translations[this._RV.getCurrentLang()].title, this.onMenuItemClick()
-  //       );
-  //       if (extendConfig.open) { this._button.isActive = true; }
-
-  //       // get ESRI TimeExtent dependency (for image server) and start slider creation
-  //       let myBundlePromise = (<any>window).RAMP.GAPI.esriLoadApiClasses([['esri/TimeExtent', 'timeExtent']]);
-  //       myBundlePromise.then(myBundle => {
-  //           new SliderManager(mapApi, this.panel, extendConfig, myBundle);
-  //       });
-  //   }
-
-  //   /**
-  //   * Event to fire on side menu item click. Open/Close the panel
-  //   * @function onMenuItemClick
-  //   * @return {function} the function to run
-  //   */
-  //  onMenuItemClick() {
-  //       return () => {
-  //           this._button.isActive = !this._button.isActive;
-  //           this._button.isActive ? this.panel.open() : this.panel.close();
-  //       };
-  //   }
+    /**
+    * Event to fire on side menu item click. Open/Close the panel
+    * @function onMenuItemClick
+    * @return {function} the function to run
+    */
+   onMenuItemClick() {
+        return () => {
+            this._button.isActive = !this._button.isActive;
+            this._button.isActive ? this.panel.open() : this.panel.close();
+        };
+    }
 }
 
-// export default interface DimensionSlider {
-//     mapApi: any,
-//     _RV: any,
-//     translations: any,
-//     panel: any,
-//     panelOptions: any,
-//     layerOptions: any
-// }
+export default interface DimensionSlider {
+    mapApi: any,
+    _RV: any,
+    translations: any,
+    panel: any,
+    panelOptions: any,
+    layerOptions: any
+}
 
-// export interface Range {
-//     min: number,
-//     max: number,
-//     staticItems?: number[]
-// }
+export interface Range {
+    min: number,
+    max: number,
+    staticItems?: number[]
+}
 
 DimensionSlider.prototype.panelOptions = {
     top: 'calc(100% - 245px)',
@@ -174,8 +133,8 @@ DimensionSlider.prototype.translations = {
         minimize: 'Minimiser l\'interface du curseur',
         maximize: 'Maximizer l\'interface du curseur',
         bar: {
-            show: 'Afficher l\'information du curseur de plage',
-            hide: 'Cacher l\'information du curseur de plage',
+            show: 'Afficher l\'information du curseur de dimension',
+            hide: 'Cacher l\'information du curseur de dimension',
             lock: 'Verrouiller la molette gauche',
             unlock: 'Déverrouiller la molette gauche',
             loop: 'Animer en boucle',
