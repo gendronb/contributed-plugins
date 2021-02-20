@@ -13,26 +13,13 @@ export default class DimensionSlider {
         this.mapApi = mapApi;
 
         // create panel
-        this.panel = this.mapApi.panels.create('dimensionSlider');
+        this.panel = this.mapApi.panels.create('dimensionSlider'); // Re-using range-slider panel name to keep css styling
         this.panel.element.css(DimensionSlider.prototype.panelOptions);
         this.panel.body = SLIDER_TEMPLATE;
 
         // get slider configuration then add/merge needed configuration
         const config = this._RV.getConfig('plugins').dimensionSlider;
-
-        let extendConfig: any = {}
-        if (typeof config !== 'undefined') {
-            extendConfig = { ...DimensionSlider.prototype.layerOptions, ...config.params };
-            extendConfig.controls = config.controls;
-            extendConfig.layers = config.layers;
-            extendConfig.open = config.open;
-            extendConfig.loop = config.loop;
-            extendConfig.autorun = config.autorun;
-        } else {
-            extendConfig = DimensionSlider.prototype.layerOptions;
-        }
-        extendConfig.language = this._RV.getCurrentLang();
-        extendConfig.translations = DimensionSlider.prototype.translations[this._RV.getCurrentLang()];
+        let extendConfig = this.parseConfig(config);
 
         // side menu button
         this._button = this.mapApi.mapI.addPluginButton(
@@ -58,6 +45,46 @@ export default class DimensionSlider {
             this._button.isActive ? this.panel.open() : this.panel.close();
         };
     }
+
+    parseConfig(config) {
+
+        let extendConfig: any = {}
+
+        if (typeof config !== 'undefined') {
+
+            extendConfig = { ...DimensionSlider.prototype.layerOptions, ...config.params };
+
+            // TODO - Refactor... crashed if config does not include these...
+            // let configKeys = ['controls', 'open', 'loop', 'autorun', 'reverse']
+            extendConfig.controls = config.controls;
+            extendConfig.open = config.open;
+            extendConfig.loop = config.loop;
+            extendConfig.autorun = config.autorun;
+
+            extendConfig.layers = config.layers;
+
+            // Override config
+            extendConfig.dimensionName = 'time'; // only dimension supported for now
+
+            // Override range-slider params to fit
+            // more specific requirements of dimension-slider
+            extendConfig.type = 'wmst';
+            extendConfig.stepType = 'static';
+            extendConfig.rangeType = 'single'; // default, will be set later when capabitilies are parsed
+            extendConfig.precision = 'date';
+            extendConfig.units = null;
+
+        } else {
+            extendConfig = DimensionSlider.prototype.layerOptions;
+        }
+
+        extendConfig.language = this._RV.getCurrentLang();
+        extendConfig.translations = DimensionSlider.prototype.translations[this._RV.getCurrentLang()];
+
+        return extendConfig
+
+    }
+
 }
 
 export default interface DimensionSlider {
@@ -83,23 +110,24 @@ DimensionSlider.prototype.panelOptions = {
 };
 
 DimensionSlider.prototype.layerOptions = {
+
+    // UI and behavior-related options
     open: true,
+    controls: ['lock', 'loop', 'delay', 'refresh'],
     autorun: false,
     loop: false,
-    precision: '0',
     delay: 3000,
     lock: false,
     export: false,
-    rangeType: 'dual',
-    stepType: 'dynamic',
-    interval: 0,
-    intervalUnit: 'year',
-    range: { min: null, max: null },
-    limit: { min: null, max: null },
-    limits: [],
-    type: 'date',
+
+    // layer and data-related options
+    dimensionName: 'time', // only dimension currently supported, will be overriden when parsed anyway
+    multipleValues: false, // will be overriden when parsed if capabitilies does not support multiple values
+    default: null, // starting value, will use default value from capabitilies if defined, otherwise will default to minimum extent value
+    dateTimeFormat: null,
+
     layers: [],
-    controls: ['lock', 'loop', 'delay', 'refresh']
+
 };
 
 DimensionSlider.prototype.translations = {

@@ -64,6 +64,17 @@ export const LOOP_BAR_TEMPLATE = `
     </md-button>
 </div>`;
 
+export const REVERSE_BAR_TEMPLATE = `
+<div class="slider-bar-control slider-reverse-control" ng-controller="ReverseSliderCtrl as ctrl">
+    <md-button
+        aria-label="{{ 'plugins.dimensionSlider.bar.reverse' | translate }}"
+        class="md-icon-button primary"
+        ng-click="ctrl.reverse()">
+        <md-tooltip>{{ 'plugins.dimensionSlider.bar.reverse' | translate }}</md-tooltip>
+        <md-icon>${createSVG('loop')}</md-icon>
+    </md-button>
+</div>`;
+
 export const PLAY_BAR_TEMPLATE = `
 <div class="slider-bar-control slider-play-control">
     <md-button

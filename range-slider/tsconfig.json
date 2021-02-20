@@ -5,6 +5,7 @@
         "module": "commonjs",
         "moduleResolution": "node",
         "noImplicitAny": false,
+        "outDir": "../dist/dimension-slider",
         "target": "es6",
         "types": ["jquery", "node"]
     },
