@@ -19,12 +19,12 @@ import { take } from 'rxjs/internal/operators/take';
  * Manage slider panel and bar creation.
  */
 export class SliderManager {
-    private _mapApi: any;
-    private _panel: any;
-    private _config: any;
-    private _myBundle: any;
-    private _slider: SliderBar;
-    private _attRead: number = 0;
+    protected _mapApi: any;
+    protected _panel: any;
+    protected _config: any;
+    protected _myBundle: any;
+    protected _slider: SliderBar;
+    protected _attRead: number = 0;
 
      /**
      * Slider manager constructor

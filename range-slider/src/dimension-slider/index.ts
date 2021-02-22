@@ -13,7 +13,7 @@ export default class DimensionSlider {
         this.mapApi = mapApi;
 
         // create panel
-        this.panel = this.mapApi.panels.create('dimensionSlider'); // Re-using range-slider panel name to keep css styling
+        this.panel = this.mapApi.panels.create('rangeSlider'); // Re-using range-slider panel name to keep css styling
         this.panel.element.css(DimensionSlider.prototype.panelOptions);
         this.panel.body = SLIDER_TEMPLATE;
 
@@ -142,6 +142,8 @@ DimensionSlider.prototype.translations = {
             unlock: 'Unlock left anchor',
             loop: 'Animate in loop',
             unloop: 'Do not animate in loop',
+            forward: 'Animate forward',
+            reverse: 'Animate backward',
             previous: 'Previous',
             play: 'Play',
             pause: 'Pause',
@@ -167,6 +169,8 @@ DimensionSlider.prototype.translations = {
             unlock: 'Déverrouiller la molette gauche',
             loop: 'Animer en boucle',
             unloop: 'Ne pas animer en boucle',
+            forward: 'Animer normalement',
+            reverse: 'Animer à rebours',
             previous: 'Précédent',
             play: 'Jouer',
             pause: 'Pause',

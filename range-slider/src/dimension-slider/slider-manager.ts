@@ -9,7 +9,8 @@ import {
     EXPORT_BAR_TEMPLATE
 } from './template';
 
-import { SliderControls } from './slider-controls';
+import { SliderManager as ParentSliderManager } from '../slider-manager';
+import { SliderControls } from '../slider-controls';
 import { SliderBar } from './slider-bar';
 import { Range } from './index';
 
@@ -25,14 +26,7 @@ dayjs.extend(utc);
 /**
  * Manage slider panel and bar creation.
  */
-export class SliderManager {
-
-    private _mapApi: any;
-    private _panel: any;
-    private _config: any;
-    private _myBundle: any;
-    private _slider: SliderBar;
-    private _attRead: number = 0;
+export class SliderManager extends ParentSliderManager {
 
     private _xmlParser: any;
 
@@ -46,10 +40,7 @@ export class SliderManager {
      */
     constructor(mapApi: any, panel: any, config: any, myBundle: any) {
 
-        this._mapApi = mapApi;
-        this._panel = panel;
-        this._config = config;
-        this._myBundle = myBundle;
+        super(mapApi, panel, config, myBundle)
 
         this._xmlParser = new Parser({
             normalizeTags: true,
@@ -203,6 +194,8 @@ export class SliderManager {
      */
     initializeSlider(layers: Layer[]): void {
 
+        console.info('initializeSlider')
+
         let config = { ...this._config };
 
         // TODO : calculate extent from layer capabilities or config
@@ -226,83 +219,6 @@ export class SliderManager {
         this._slider.range = config.range.min !== null ? config.range : config.limit;
         this.setSliderBar();
 
-        // // if limit are set, we do not have to query attributes to find this info so start slider
-        // // NOTE: WMS layer always need to have limit define
-        // if (this._config.limit.min !== null) {
-        //     // initialize limit and range if not done from layer attributes
-        //     this._slider.limit = this._config.limit;
-        //     this._slider.range = this._config.range.min !== null ? this._config.range : this._config.limit;
-        //     this.setSliderBar();
-        // } else {
-        //     for (let item of layers) {
-        //         // we only support esri layer (dynamic and feature) to get the attributes
-        //         const layerType = item.layer.type;
-        //         if (layerType === 'esriDynamic' || layerType === 'esriFeature') {
-        //             const attrs = item.layer.getAttributes();
-        //             if (attrs.length === 0) {
-        //                 this.startAttributesEvent(item.layerInfo, layers.length);
-        //             }
-        //         }
-        //     }
-        // }
-
-    }
-
-    /**
-     * Launch the attributesAdded subscription event
-     * @function startAttributesEvent
-     * @param {LayerInfo} layerInfo the info to get the attributes
-     * @param {Number} nbLayers the number of layers to check
-     */
-    // startAttributesEvent(layerInfo: LayerInfo, nbLayers: number): void {
-    //     this._mapApi.layers.attributesAdded.pipe(take(1)).subscribe((attrPipe: AttributePipe) => {
-    //         this.setAttributes(attrPipe, layerInfo, nbLayers);
-    //     });
-    // }
-
-    /**
-     * Set attributes from the resolve event of startAttributesEvent. Wween need to launch
-     * startAttributesEvent for every needed layer
-     * @function setAttributes
-     * @param {AttributePipe} attrPipe the object returned by the attributesAdded event
-     * @param {LayerInfo} layerInfo the info to get the attributes
-     * @param {Number} nbLayers the number of layers to check
-     */
-    // setAttributes(attrPipe: AttributePipe, layerInfo: LayerInfo, nbLayers: number): void {
-    //     // if there is attributes and it is the needed layer get the values
-    //     // if not, relaunch startAttributesEvent
-    //     if (attrPipe.attributes.length > 0 && attrPipe.layer.id === layerInfo.id) {
-    //         this._attRead += 1;
-
-    //         // get attributes value for specified field
-    //         const values = [];
-    //         for (let row of attrPipe.attributes) { values.push(row[layerInfo.field]); }
-
-    //         // set limit and range if not set from configuration. Also update if limit are higher of lower then actual values
-    //         const limit: Range = { min: Math.min.apply(null, values), max: Math.max.apply(null, values) };
-    //         if (this._slider.limit.min === null || this._slider.limit.min > limit.min) { this._slider.limit.min = limit.min; }
-    //         if (this._slider.limit.max === null || this._slider.limit.max < limit.max) { this._slider.limit.max = limit.max; }
-    //         this._slider.range = this._config.range.min !== null ? this._config.range : this._slider.limit;
-
-    //         // if all layers are set, start slider creation
-    //         if (nbLayers === this._attRead) { this.setSliderBar(); }
-    //     } else {
-    //         this.startAttributesEvent(layerInfo, nbLayers)
-    //     }
-    // }
-
-    /**
-     * Set slider bar
-     * @function setSliderBar
-     */
-    setSliderBar(): void {
-        // initialiaze slider bar
-        this._slider.startSlider(this._config.type, this._config.language);
-
-        // set bar controls then check if the panel should be open and if the slider is in autorun
-        this.setBarControls(this._config.controls);
-        if (this._config.open) { this._panel.open(); }
-        if (this._config.autorun) { this._slider.play(true); }
     }
 
     /**

@@ -9,21 +9,21 @@ const gifshot = require('gifshot');
 const FileSaver = require('file-saver');
 
 export class SliderBar {
-    private _slider: any;
-    private _mapApi: any;
-    private _config: any;
-    private _myBundle: any;
+    protected _slider: any;
+    protected _mapApi: any;
+    protected _config: any;
+    protected _myBundle: any;
 
-    private _playInterval: any;
-    private _range: Range = { min: null, max: null };
-    private _limit: Range = { min: null, max: null };
-    private _limits: number[] = [];
-    private _step: number;
-    private _precision: number;
-    private _stepType: string;
-    private _rangeType: string;
-    private _interval: number;
-    private _intervalUnit: string;
+    protected _playInterval: any;
+    protected _range: Range = { min: null, max: null };
+    protected _limit: Range = { min: null, max: null };
+    protected _limits: number[] = [];
+    protected _step: number;
+    protected _precision: number;
+    protected _stepType: string;
+    protected _rangeType: string;
+    protected _interval: number;
+    protected _intervalUnit: string;
 
     // *** Static observable for the class ***
     // observable to detect play/pause modification
@@ -31,12 +31,12 @@ export class SliderBar {
     static getPlayState(): Observable<boolean> {
         return this._playState.asObservable();
     }
-    private static setPlayState(newValue: boolean): void {
+    protected static setPlayState(newValue: boolean): void {
         this._playState.next(newValue);
     }
 
     // array of images to export as Gif
-    private _gifImages = []
+    protected _gifImages = []
 
     /**
      * Slider bar constructor
@@ -68,7 +68,41 @@ export class SliderBar {
         this._intervalUnit = config.intervalUnit;
 
         // set units label value
-        document.getElementsByClassName('slider-units')[0].textContent = config.units;
+        if (config.units) {
+            document.getElementsByClassName('slider-units')[0].textContent = config.units;
+        } else {
+            // remove units placeholder to save space
+            document.getElementsByClassName('slider-bar')[0].classList.add('no-units');
+        }
+
+    }
+
+    removePipsOverlaps(): void {
+
+        const items = $('.noUi-value');
+
+        let curIndex = 0;
+        let testIndex = 1;
+
+        // loop until are pips are not tested
+        while (testIndex !== items.length) {
+            // get div rectangle and check for collision
+            let d1 = (items[curIndex] as any).getBoundingClientRect();
+            let d2 = (items[testIndex] as any).getBoundingClientRect();
+            let ox = Math.abs(d1.x - d2.x) < (d1.x < d2.x ? d2.width : d1.width);
+            let oy = Math.abs(d1.y - d2.y) < (d1.y < d2.y ? d2.height : d1.height);
+
+            // if there is a collision, set display none and test with the next pips
+            if (ox && oy) {
+                items[testIndex].style.display = 'none';
+                testIndex++;
+            } else {
+                // if there is no  collision and reset the curIndex to be the one before the testIndex
+                curIndex = (testIndex - curIndex !== 1) ? testIndex : curIndex + 1;
+                testIndex++;
+            }
+        }
+
     }
 
     /**
@@ -100,27 +134,7 @@ export class SliderBar {
             });
 
         // remove overlapping pips. This can happen often with static limits and date
-        const items = $('.noUi-value');
-        let curIndex = 0;
-        let testIndex = 1;
-        // loop until are pips are not tested
-        while (testIndex !== items.length) {
-            // get div rectangle and check for collision
-            let d1 = (items[curIndex] as any).getBoundingClientRect();
-            let d2 = (items[testIndex] as any).getBoundingClientRect();
-            let ox = Math.abs(d1.x - d2.x) < (d1.x < d2.x ? d2.width : d1.width);
-            let oy = Math.abs(d1.y - d2.y) < (d1.y < d2.y ? d2.height : d1.height);
-
-            // if there is a collision, set display none and test with the next pips
-            if (ox && oy) {
-                items[testIndex].style.display = 'none';
-                testIndex++;
-            } else {
-                // if there is no  collision and reset the curIndex to be the one before the testIndex
-                curIndex = (testIndex - curIndex !== 1) ? testIndex : curIndex + 1;
-                testIndex++;
-            }
-        }
+        this.removePipsOverlaps()
 
         // add handles to focus cycle
         document.getElementsByClassName('noUi-handle-lower')[0].setAttribute('tabindex', '-2');
