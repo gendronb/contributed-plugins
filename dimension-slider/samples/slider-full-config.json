@@ -638,8 +638,7 @@
               ""
             ],
             "init": true,
-            "id": "salish",
-            "name": "NAPL data over Salish region"
+            "id": "salish"
           }
         ],
         "name": "NAPL data over Salish region",
@@ -723,12 +722,11 @@
               ""
             ],
             "init": true,
-            "id": "regina",
-            "name": "NAPL data over Regina region"
+            "id": "regina"
           }
         ],
         "name": "NAPL data over Regina region",
-        "id": "NAPL data over Regina region",
+        "id": "napl_regina",
         "url": "https://datacube.services.geo.ca/ows/aerial",
         "featureInfoMimeType": "text/plain"
       }
@@ -881,7 +879,16 @@
   "plugins": {
     "dimensionSlider": {
       "enable": true,
-      "layers": ["napl_salish"]
+      "open": true,
+      "controls": ["loop", "reverse"],
+      "layers": ["napl_salish", "napl_regina"],
+      "params": {
+        "dimensionName": "time",
+        "dateTimeFormat": "YYYY",
+        "extent": "1930-01-01/2000-01-01/P5Y, 1960-01-01/1980-01-01/P1Y",
+        "multipleValues": false
+      },
+      "description": "Dimension Slider Full Configuration Sample"
     },
     "coordInfo": {
       "enable": false

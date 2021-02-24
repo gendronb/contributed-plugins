@@ -3,6 +3,7 @@ export declare const MIN_MAX_TEMPLATE = "\n<div class=\"slider-bar-control slide
 export declare const DESC_BAR_TEMPLATE: string;
 export declare const LOCK_BAR_TEMPLATE: string;
 export declare const LOOP_BAR_TEMPLATE: string;
+export declare const REVERSE_BAR_TEMPLATE: string;
 export declare const PLAY_BAR_TEMPLATE: string;
 export declare const REFRESH_BAR_TEMPLATE: string;
 export declare const DELAY_BAR_TEMPLATE = "\n<div ng-controller=\"DelaySliderCtrl as ctrl\" class=\"slider-bar-control slider-delay-control\">\n    <md-input-container class=\"md-block\" md-no-float flex>\n        <label>{{ 'plugins.rangeSlider.bar.delay' | translate }}</label>\n        <md-select\n            aria-label=\"{{ 'plugins.rangeSlider.bar.delay' | translate }}\"\n            ng-model=\"ctrl.selectedDelay\"\n            ng-change=\"ctrl.selectDelay()\">\n            <md-option ng-repeat=\"(key, value) in { 1000: '1 sec', 2000: '2 sec', 3000: '3 sec', 4000: '4 sec', 5000: '5 sec', 6000: '6 sec', 7000: '7 sec' }\" ng-value=\"{{ key }}\">\n                {{ value }}\n            </md-option>\n        </md-select>\n    </md-input-container>\n</div>";

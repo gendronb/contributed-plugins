@@ -1,13 +1,14 @@
+import { SliderBar } from './slider-bar';
 /**
  * Manage slider panel and bar creation.
  */
 export declare class SliderManager {
-    private _mapApi;
-    private _panel;
-    private _config;
-    private _myBundle;
-    private _slider;
-    private _attRead;
+    protected _mapApi: any;
+    protected _panel: any;
+    protected _config: any;
+    protected _myBundle: any;
+    protected _slider: SliderBar;
+    protected _attRead: number;
     /**
     * Slider manager constructor
     * @constructor

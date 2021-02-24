@@ -1,24 +1,25 @@
 import { Observable, BehaviorSubject } from 'rxjs';
 import { Range } from './index';
 export declare class SliderBar {
-    private _slider;
-    private _mapApi;
-    private _config;
-    private _myBundle;
-    private _playInterval;
-    private _range;
-    private _limit;
-    private _limits;
-    private _step;
-    private _precision;
-    private _stepType;
-    private _rangeType;
-    private _interval;
-    private _intervalUnit;
+    protected _slider: any;
+    protected _mapApi: any;
+    protected _config: any;
+    protected _myBundle: any;
+    protected _playInterval: any;
+    protected _range: Range;
+    protected _limit: Range;
+    protected _limits: number[];
+    protected _step: number;
+    protected _precision: number;
+    protected _stepType: string;
+    protected _rangeType: string;
+    protected _interval: number;
+    protected _intervalUnit: string;
+    protected _defaultValue: any;
     static _playState: BehaviorSubject<boolean>;
     static getPlayState(): Observable<boolean>;
-    private static setPlayState;
-    private _gifImages;
+    protected static setPlayState(newValue: boolean): void;
+    protected _gifImages: any[];
     /**
      * Slider bar constructor
      * @constructor
@@ -26,6 +27,7 @@ export declare class SliderBar {
      * @param {Any} config the slider configuration
      */
     constructor(mapApi: any, config: any, myBundle: any);
+    removePipsOverlaps(): void;
     /**
      * Start slider creation
      * @function
@@ -110,6 +112,16 @@ export declare class SliderBar {
      */
     get loop(): boolean;
     /**
+     * Set slider reverse
+     * @property reverse
+     */
+    set reverse(reverse: boolean);
+    /**
+     * Get slider reverse
+     * @property reverse
+     */
+    get reverse(): boolean;
+    /**
      * Set slider delay
      * @property delay
      */
@@ -138,9 +150,10 @@ export declare class SliderBar {
     /**
      * Loop play until the max limit is reach
      * @function playInstant
+     * @param {Number} limitmin the min limit
      * @param {Number} limitmax the max limit
      */
-    playInstant(limitmax: number): void;
+    playInstant(limitmin: number, limitmax: number): void;
     /**
      * Check if we need to take snapshot to export GIF
      * @function setTakeSnapShot

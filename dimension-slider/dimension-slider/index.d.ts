@@ -1,4 +1,4 @@
-export default class RangeSlider {
+export default class DimensionSlider {
     protected _button: any;
     /**
     * Plugin init
@@ -12,9 +12,9 @@ export default class RangeSlider {
     * @return {function} the function to run
     */
     onMenuItemClick(): () => void;
-    parsePluginConfig(config: any): any;
+    parsePluginConfig(config?: any): any;
 }
-export default interface RangeSlider {
+export default interface DimensionSlider {
     mapApi: any;
     _RV: any;
     translations: any;
