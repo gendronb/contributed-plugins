@@ -21,33 +21,6 @@ export class SliderBar extends ParentSliderBar {
         super(mapApi, config, myBundle);
     }
 
-       //     // remove overlapping pips. This can happen often with static limits and date
-    //     const items = $('.noUi-value');
-    //     const markers = $('.noUi-marker');
-
-    //     let curIndex = 0;
-    //     let testIndex = 1;
-    //     // loop until are pips are not tested
-    //     while (testIndex !== items.length) {
-    //         // get div rectangle and check for collision
-    //         let d1 = (items[curIndex] as any).getBoundingClientRect();
-    //         let d2 = (items[testIndex] as any).getBoundingClientRect();
-    //         let ox = Math.abs(d1.x - d2.x) < (d1.x < d2.x ? d2.width : d1.width);
-    //         let oy = Math.abs(d1.y - d2.y) < (d1.y < d2.y ? d2.height : d1.height);
-
-    //         // if there is a collision, set display none and test with the next pips
-    //         if (ox && oy) {
-    //             items[testIndex].style.display = 'none';
-    //             markers[testIndex].style.height = "12px";
-    //             markers[testIndex].style.backgroundColor = "#ccc";
-    //             testIndex++;
-    //         } else {
-    //             // if there is no  collision and reset the curIndex to be the one before the testIndex
-    //             curIndex = (testIndex - curIndex !== 1) ? testIndex : curIndex + 1;
-    //             testIndex++;
-    //         }
-    //     }
-
     /**
      * Set pips (slider labels) format
      * @function formatPips
@@ -59,7 +32,7 @@ export class SliderBar extends ParentSliderBar {
     formatPips(value: any, field: string, lang: string): any {
 
         let date = dayjs.utc(value);
-        let dateTimeFormat = this._config.dateTimeFormat || 'YYYY-MM-DD';
+        let dateTimeFormat = this._config.dateTimeFormat;
 
         value = date.format(dateTimeFormat);
 
@@ -81,7 +54,7 @@ export class SliderBar extends ParentSliderBar {
 
         for (let layer of this._config.layers) {
 
-            const myLayer = this._mapApi.layers.getLayersById(layer.id)[0];
+            const myLayer = this._mapApi.layers.getLayersById(layer)[0];
             const layerType = myLayer.type;
 
             let dimensionName = (this._config.dimensionName || 'time');

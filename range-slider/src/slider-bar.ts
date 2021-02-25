@@ -9,6 +9,7 @@ const gifshot = require('gifshot');
 const FileSaver = require('file-saver');
 
 export class SliderBar {
+
     protected _slider: any;
     protected _mapApi: any;
     protected _config: any;
@@ -24,6 +25,8 @@ export class SliderBar {
     protected _rangeType: string;
     protected _interval: number;
     protected _intervalUnit: string;
+
+    protected _defaultValue: any;
 
     // *** Static observable for the class ***
     // observable to detect play/pause modification
@@ -67,6 +70,8 @@ export class SliderBar {
         this._interval = config.interval;
         this._intervalUnit = config.intervalUnit;
 
+        this._defaultValue = config.default;
+
         // set units label value
         if (config.units) {
             document.getElementsByClassName('slider-units')[0].textContent = config.units;
@@ -80,6 +85,7 @@ export class SliderBar {
     removePipsOverlaps(): void {
 
         const items = $('.noUi-value');
+        const markers = $('.noUi-marker');
 
         let curIndex = 0;
         let testIndex = 1;
@@ -92,9 +98,10 @@ export class SliderBar {
             let ox = Math.abs(d1.x - d2.x) < (d1.x < d2.x ? d2.width : d1.width);
             let oy = Math.abs(d1.y - d2.y) < (d1.y < d2.y ? d2.height : d1.height);
 
-            // if there is a collision, set display none and test with the next pips
+            // if there is a collision, set classname and test with the next pips
             if (ox && oy) {
-                items[testIndex].style.display = 'none';
+                items[testIndex].classList.add('noUi-value-overlap')
+                markers[testIndex].classList.add('noUi-marker-overlap')
                 testIndex++;
             } else {
                 // if there is no  collision and reset the curIndex to be the one before the testIndex
@@ -116,7 +123,7 @@ export class SliderBar {
         const mapWidth = this._mapApi.fgpMapObj.width;
         nouislider.create(this._slider,
             {
-                start: (this._rangeType === 'dual') ? [this.range.min, this.range.max] : [this.range.min],
+                start: (this._rangeType === 'dual') ? [ this._defaultValue || this.range.min, this.range.max ] : [ this._defaultValue || this.range.min ],
                 connect: true,
                 behaviour: 'drag-tap',
                 tooltips: this.setTooltips(type, language),
@@ -145,7 +152,9 @@ export class SliderBar {
         if (this._slider.range.min === null) { this._slider.range = this.range; }
 
         // set the initial definition query
-        this._slider.range = (this._rangeType === 'dual') ? this._slider.range : { min: this._slider.range.min, max: this._slider.range.min }
+        let min = this._defaultValue || this._slider.range.min;
+        let max = this._slider.range.max;
+        this._slider.range = (this._rangeType === 'dual') ? { min, max } : { min, max: min }
         this.setDefinitionQuery(this._slider.range);
 
         // trap the on change event when user use handles

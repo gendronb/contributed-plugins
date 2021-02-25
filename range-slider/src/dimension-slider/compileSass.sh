@@ -1,2 +1,2 @@
 # Plugin name to compile to
-node-sass ./src/main.scss ../../dist/dimension-slider/dimension-slider.css --importer node_modules/node-sass-import
+node-sass ./src/dimension-slider/main.scss ../dist/dimension-slider/dimension-slider.css --importer node_modules/node-sass-import

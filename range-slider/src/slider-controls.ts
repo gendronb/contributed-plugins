@@ -33,11 +33,16 @@ export class SliderControls {
             this.isShow = true;
 
             this.show = () => {
-                this.isShow = !this.isShow;
 
                 const slider = document.getElementById('rangeSlider');
-                slider.style.height = (this.isShow) ? '185px' : '125px';
-                slider.style.top = (this.isShow) ? 'calc(100% - 245px)' : 'calc(100% - 185px)';
+                this.isShow = !this.isShow;
+
+                if (this.isShow) {
+                    slider.classList.remove('collapsed')
+                } else {
+                    slider.classList.add('collapsed')
+                }
+
             };
         });
 

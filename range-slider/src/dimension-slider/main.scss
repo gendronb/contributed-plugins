@@ -1,0 +1,35 @@
+@import '../../node_modules/nouislider/distribute/nouislider.css';
+@import '../common.scss';
+
+#rangeSlider {
+    height: 205px !important;
+    top: calc(100% - 265px) !important;
+}
+
+#rangeSlider.collapsed {
+    height: 145px !important;;
+    top: calc(100% - 205px) !important;;
+}
+
+.noUi-value {
+    margin-top: 22px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+.noUi-marker-horizontal.noUi-marker-large {
+    height: 22px;
+}
+
+.noUi-marker.noUi-marker-horizontal.noUi-marker-large {
+    height: 25px;
+  }
+
+.noUi-marker-horizontal.noUi-marker-large.noUi-marker-overlap {
+    height: 15px;
+    background-color: #ccc;
+}
+
+.noUi-value-horizontal.noUi-value-large.noUi-value-overlap {
+    display: none;
+}

@@ -1,8 +1,14 @@
 import { SLIDER_TEMPLATE } from './template';
 import { SliderManager } from './slider-manager';
 
+const dayjs = require('dayjs');
+const utc = require('dayjs/plugin/utc');
+const duration = require('dayjs/plugin/duration');
+
+dayjs.extend(utc);
+dayjs.extend(duration);
 export default class DimensionSlider {
-    private _button: any;
+    protected _button: any;
 
     /**
     * Plugin init
@@ -10,6 +16,7 @@ export default class DimensionSlider {
     * @param {Any} mapApi the viewer api
     */
     init(mapApi: any) {
+
         this.mapApi = mapApi;
 
         // create panel
@@ -19,7 +26,10 @@ export default class DimensionSlider {
 
         // get slider configuration then add/merge needed configuration
         const config = this._RV.getConfig('plugins').dimensionSlider;
-        let extendConfig = this.parseConfig(config);
+        let extendConfig = this.parsePluginConfig(config);
+
+        extendConfig.language = this._RV.getCurrentLang();
+        extendConfig.translations = DimensionSlider.prototype.translations[this._RV.getCurrentLang()];
 
         // side menu button
         this._button = this.mapApi.mapI.addPluginButton(
@@ -32,6 +42,7 @@ export default class DimensionSlider {
         myBundlePromise.then(myBundle => {
             new SliderManager(mapApi, this.panel, extendConfig, myBundle);
         });
+
     }
 
     /**
@@ -39,47 +50,38 @@ export default class DimensionSlider {
     * @function onMenuItemClick
     * @return {function} the function to run
     */
-   onMenuItemClick() {
+    onMenuItemClick() {
         return () => {
             this._button.isActive = !this._button.isActive;
             this._button.isActive ? this.panel.open() : this.panel.close();
         };
     }
 
-    parseConfig(config) {
+    parsePluginConfig(config:any = {}) {
 
-        let extendConfig: any = {}
+        let defaultConfig = DimensionSlider.prototype.layerOptions;
+        let defaultConfigParams = defaultConfig.params;
 
-        if (typeof config !== 'undefined') {
+        let configParams = { ...defaultConfigParams, ...config.params }
 
-            extendConfig = { ...DimensionSlider.prototype.layerOptions, ...config.params };
+        delete defaultConfig.params
+        delete config.params
 
-            // TODO - Refactor... crashed if config does not include these...
-            // let configKeys = ['controls', 'open', 'loop', 'autorun', 'reverse']
-            extendConfig.controls = config.controls;
-            extendConfig.open = config.open;
-            extendConfig.loop = config.loop;
-            extendConfig.autorun = config.autorun;
+        let extendConfig = { ...defaultConfig, ...config, ...configParams }
 
-            extendConfig.layers = config.layers;
+        // Override config
+        extendConfig.dimensionName = 'time'; // only dimension supported for now
 
-            // Override config
-            extendConfig.dimensionName = 'time'; // only dimension supported for now
+        // Override range-slider params to fit
+        // more specific requirements of dimension-slider
+        extendConfig.type = 'wmst';
+        extendConfig.stepType = 'static';
+        extendConfig.rangeType = extendConfig.multipleValues ? 'dual' : 'single'; // will be overriden later when capabitilies are parsed
+        extendConfig.precision = 'date';
+        extendConfig.units = null;
 
-            // Override range-slider params to fit
-            // more specific requirements of dimension-slider
-            extendConfig.type = 'wmst';
-            extendConfig.stepType = 'static';
-            extendConfig.rangeType = 'single'; // default, will be set later when capabitilies are parsed
-            extendConfig.precision = 'date';
-            extendConfig.units = null;
-
-        } else {
-            extendConfig = DimensionSlider.prototype.layerOptions;
-        }
-
-        extendConfig.language = this._RV.getCurrentLang();
-        extendConfig.translations = DimensionSlider.prototype.translations[this._RV.getCurrentLang()];
+        let defaultValue = extendConfig.default ? dayjs.utc(extendConfig.default).valueOf() : null;
+        extendConfig.default = defaultValue
 
         return extendConfig
 
@@ -113,20 +115,24 @@ DimensionSlider.prototype.layerOptions = {
 
     // UI and behavior-related options
     open: true,
-    controls: ['lock', 'loop', 'delay', 'refresh'],
+    controls: [],
     autorun: false,
     loop: false,
     delay: 3000,
     lock: false,
     export: false,
 
-    // layer and data-related options
-    dimensionName: 'time', // only dimension currently supported, will be overriden when parsed anyway
-    multipleValues: false, // will be overriden when parsed if capabitilies does not support multiple values
-    default: null, // starting value, will use default value from capabitilies if defined, otherwise will default to minimum extent value
-    dateTimeFormat: null,
+    params: {
 
-    layers: [],
+        dimensionName: 'time', // only dimension currently supported, will be overriden upon initialization
+        multipleValues: false, // if set to true, will be overriden back to false if capabitilies does not support multiple values
+        default: null, // starting value, will use default value from capabitilies if not set, otherwise will default to minimum extent value
+        dateTimeFormat: 'YYYY-MM',
+        extent: null,
+
+    },
+
+    layers: [], // at least 1 time-enabled WMS layer must be set
 
 };
 

@@ -23,6 +23,7 @@
     "scripts": {
         "build": "webpack --mode=production --config=webpack.config.js && npm run sass",
         "build:dimension": "webpack --mode=production --config=webpack.dimension.config.js && npm run sass:dimension",
+        "build:all": "npm run build && npm run build:dimension",
         "serve": "webpack serve --progress --hot --mode=development --config webpack.config.js",
         "serve:dimension": "webpack serve --progress --hot --mode=development --config webpack.dimension.config.js",
         "sass": "bash ./src/compileSass.sh",

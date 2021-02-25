@@ -4,7 +4,6 @@ import { SliderManager } from './slider-manager';
 export default class RangeSlider {
     protected _button: any;
 
-
     /**
     * Plugin init
     * @function init
@@ -20,18 +19,8 @@ export default class RangeSlider {
 
         // get slider configuration then add/merge needed configuration
         const config = this._RV.getConfig('plugins').rangeSlider;
+        let extendConfig = this.parsePluginConfig(config);
 
-        let extendConfig: any = {}
-        if (typeof config !== 'undefined') {
-            extendConfig = { ...RangeSlider.prototype.layerOptions, ...config.params };
-            extendConfig.controls = config.controls;
-            extendConfig.layers = config.layers;
-            extendConfig.open = config.open;
-            extendConfig.loop = config.loop;
-            extendConfig.autorun = config.autorun;
-        } else {
-            extendConfig = RangeSlider.prototype.layerOptions;
-        }
         extendConfig.language = this._RV.getCurrentLang();
         extendConfig.translations = RangeSlider.prototype.translations[this._RV.getCurrentLang()];
 
@@ -59,6 +48,24 @@ export default class RangeSlider {
             this._button.isActive ? this.panel.open() : this.panel.close();
         };
     }
+
+    parsePluginConfig(config:any) {
+
+        let extendConfig: any = {}
+        if (typeof config !== 'undefined') {
+            extendConfig = { ...RangeSlider.prototype.layerOptions, ...config.params };
+            extendConfig.controls = config.controls;
+            extendConfig.layers = config.layers;
+            extendConfig.open = config.open;
+            extendConfig.loop = config.loop;
+            extendConfig.autorun = config.autorun;
+        } else {
+            extendConfig = RangeSlider.prototype.layerOptions;
+        }
+
+        return extendConfig
+    }
+
 }
 
 export default interface RangeSlider {
