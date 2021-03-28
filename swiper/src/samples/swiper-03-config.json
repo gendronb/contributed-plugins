@@ -91,23 +91,181 @@
       },
       "layers": [
         {
-          "id": "0",
-          "name": "Power Plant 100MW or more (hydro)",
-          "layerType": "esriFeature",
-          "url": "https://geoappext.nrcan.gc.ca/arcgis/rest/services/NACEI/energy_infrastructure_of_north_america_en/MapServer/20"
+          "layerChoice": "ogcWms",
+          "layerType": "ogcWms",
+          "refreshInterval": 0,
+          "expectedResponseTime": 4000,
+          "suppressGetCapabilities": true,
+          "tolerance": 5,
+          "outfields": "*",
+          "controls": [
+            "opacity",
+            "visibility",
+            "boundingBox",
+            "query",
+            "snapshot",
+            "metadata",
+            "boundaryZoom",
+            "refresh",
+            "reload",
+            "remove",
+            "settings",
+            "data",
+            "styles"
+          ],
+          "disabledControls": [],
+          "enableStructuredDelete": false,
+          "state": {
+            "opacity": 1,
+            "visibility": true,
+            "boundingBox": false,
+            "query": true,
+            "snapshot": false,
+            "hovertips": true
+          },
+          "layerEntries": [
+            {
+              "outfields": "*",
+              "stateOnly": false,
+              "table": {
+                "title": "",
+                "maximize": false,
+                "lazyFilter": false,
+                "applyMap": false,
+                "showFilter": true,
+                "filterByExtent": false,
+                "searchStrictMatch": false,
+                "printEnabled": false,
+                "columns": []
+              },
+              "controls": [
+                "opacity",
+                "visibility",
+                "boundingBox",
+                "query",
+                "snapshot",
+                "metadata",
+                "boundaryZoom",
+                "refresh",
+                "reload",
+                "remove",
+                "settings",
+                "data",
+                "styles"
+              ],
+              "disabledControls": [],
+              "state": {
+                "opacity": 1,
+                "visibility": true,
+                "boundingBox": false,
+                "query": true,
+                "snapshot": false,
+                "hovertips": true
+              },
+              "allStyles": [
+                ""
+              ],
+              "init": true,
+              "id": "regina",
+              "name": "NAPL data over Regina region - Right"
+            }
+          ],
+          "name": "NAPL data over Regina region - Right",
+          "id": "napl_regina_right",
+          "url": "https://datacube.services.geo.ca/ows/aerial",
+          "featureInfoMimeType": "text/plain"
         },
         {
-          "id": "1",
-          "name": "Power Plant 1MW or more (hydro)",
-          "layerType": "esriFeature",
-          "url": "https://geoappext.nrcan.gc.ca/arcgis/rest/services/NACEI/energy_infrastructure_of_north_america_en/MapServer/32"
+          "layerChoice": "ogcWms",
+          "layerType": "ogcWms",
+          "refreshInterval": 0,
+          "expectedResponseTime": 4000,
+          "suppressGetCapabilities": true,
+          "tolerance": 5,
+          "outfields": "*",
+          "controls": [
+            "opacity",
+            "visibility",
+            "boundingBox",
+            "query",
+            "snapshot",
+            "metadata",
+            "boundaryZoom",
+            "refresh",
+            "reload",
+            "remove",
+            "settings",
+            "data",
+            "styles"
+          ],
+          "disabledControls": [],
+          "enableStructuredDelete": false,
+          "state": {
+            "opacity": 0.8,
+            "visibility": true,
+            "boundingBox": false,
+            "query": true,
+            "snapshot": false,
+            "hovertips": true
+          },
+          "layerEntries": [
+            {
+              "outfields": "*",
+              "stateOnly": false,
+              "table": {
+                "title": "",
+                "maximize": false,
+                "lazyFilter": false,
+                "applyMap": false,
+                "showFilter": true,
+                "filterByExtent": false,
+                "searchStrictMatch": false,
+                "printEnabled": false,
+                "columns": []
+              },
+              "controls": [
+                "opacity",
+                "visibility",
+                "boundingBox",
+                "query",
+                "snapshot",
+                "metadata",
+                "boundaryZoom",
+                "refresh",
+                "reload",
+                "remove",
+                "settings",
+                "data",
+                "styles"
+              ],
+              "disabledControls": [],
+              "state": {
+                "opacity": 0.5,
+                "visibility": true,
+                "boundingBox": false,
+                "query": true,
+                "snapshot": false,
+                "hovertips": true
+              },
+              "allStyles": [
+                ""
+              ],
+              "init": true,
+              "id": "regina",
+              "name": "NAPL data over Regina region - Left"
+            }
+          ],
+          "name": "NAPL data over Regina region - Left",
+          "id": "napl_regina_left",
+          "url": "https://datacube.services.geo.ca/ows/aerial",
+          "featureInfoMimeType": "text/plain"
         },
         {
-            "id": "2",
-            "name": "Power Plant 100MW or more (petroleum)",
-            "layerType": "esriFeature",
-            "url": "https://geoappext.nrcan.gc.ca/arcgis/rest/services/NACEI/energy_infrastructure_of_north_america_en/MapServer/24"
-          }
+          "id": "2",
+          "name": "Power Plant 100MW or more (petroleum)",
+          "layerType": "esriFeature",
+          "url": "https://geoappext.nrcan.gc.ca/arcgis/rest/services/NACEI/energy_infrastructure_of_north_america_en/MapServer/24"
+        }
       ],
       "extentSets": [
         {
@@ -264,7 +422,21 @@
       "swiper": {
         "type": "vertical",
         "keyboardOffset": 10,
-        "layers": [{"id": "0"}, {"id": "1"}]
+        "left": {
+          "layers": ["napl_regina_left"],
+          "params": {
+            "dimension": "time",
+            "defaultValue": "1947-01-01"
+          }
+        },
+        "right": {
+          "layers": ["napl_regina_right"],
+          "params": {
+            "dimension": "time",
+            "defaultValue": "1967-01-01",
+            "dateTimeFormat": "YYYY"
+          }
+        }
       }
     }
   }

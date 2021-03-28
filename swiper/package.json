@@ -28,8 +28,15 @@
     },
     "dependencies": {
         "ag-grid-community": "19.0.0",
+        "buffer": "^6.0.3",
+        "dayjs": "^1.10.4",
+        "draggabilly": "^2.3.0",
+        "gh-pages": "2.2.0",
+        "nouislider": "^14.6.4",
         "rxjs": "6.4.0",
-        "gh-pages": "2.2.0"
+        "stream-browserify": "^3.0.0",
+        "timers-browserify": "^2.0.12",
+        "xml2js": "^0.4.23"
     },
     "devDependencies": {
         "@types/jquery": "3.3.29",

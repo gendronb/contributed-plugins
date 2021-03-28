@@ -25,9 +25,10 @@
         <section id="header">
             <div class="row">
                 <select id="selectConfig" class="tool">
-                    <option value="swiper-default-config.json">01. Default</option>
-                    <option value="swiper-osdp1-config.json">02. OSDP use case 1</option>
-                    <option value="swiper-osdp2-config.json">03. OSDP use case 2</option>
+                    <option value="swiper-01-config.json">01. Only Right Layers, Default (service-defined) Params</option>
+                    <option value="swiper-02-config.json">02. Only Right Layers, User-defined Params</option>
+                    <option value="swiper-03-config.json">03. Left and Right Layers, User-defined Params</option>
+                    <option value="swiper-04-config.json">04. No Dimensional Layers (Legacy Swiper)</option>
                 </select>
             </div>
         </section>
@@ -35,7 +36,7 @@
             class="myMap"
             id="mapSwiper"
             is="rv-map"
-            rv-config="swiper-config.json"
+            rv-config="swiper-config-01.json"
             rv-langs='["en-CA", "fr-CA"]'
             rv-plugins="swiper"
         >
